@@ -1,9 +1,30 @@
+<style lang='stylus'>
+</style>
 <template>
   <div>
-    <nuxt/>
+    <layout-header></layout-header>
+    <nuxt />
   </div>
 </template>
 
-<style>
+<script>
+import LayoutHeader from './Layout/LayoutHeader'
 
-</style>
+export default {
+  components: { LayoutHeader },
+
+  props: {
+  },
+
+  data() {
+    return {
+    }
+  },
+
+  computed: {},
+
+  mounted() { },
+
+  methods: {}
+}
+</script>
