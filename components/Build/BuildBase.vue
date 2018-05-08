@@ -32,7 +32,7 @@
       <div class="build-base__cube" :style="{width: w + 'px'}"></div>
     </div>
     <div class="build-base__bars" :style="{width: w + 'px', height: barsHeight + 'px'}">
-      <div class="build-base__bar" :style="{height: item + 'px'}" v-for="(item, index) in bars"></div>
+      <div class="build-base__bar" :style="{height: item + 'px'}" v-for="(item, index) in bars" :key="index"></div>
     </div>
   </div>
 </template>

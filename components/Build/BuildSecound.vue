@@ -24,7 +24,7 @@
 <template>
   <div class="build-secound" :style="{width: width + 'px', height: height + 'px'}">
     <div class="build-secound__clip" :style="{clip: 'rect(' + clipHeight + 'px, ' + width + 'px, ' + height + 'px, 0px)'}">
-      <svg-path v-for="(item, index) in secounds" :key="index" :width="width" :height="height" :path="item[0]" :fill="item[1]"></svg-path>
+      <svg-path v-for="(item, index) in secounds" :key="index" :width="width" :height="height" :path="item.content" :fill="item.fill"></svg-path>
     </div>
   </div>
 </template>
@@ -35,6 +35,7 @@ export default {
   components: { SvgPath },
 
   props: {
+    code: String,
     width: Number,
     height: Number,
     layers: Number,

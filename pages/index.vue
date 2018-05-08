@@ -1,28 +1,33 @@
 <style lang='stylus'>
 </style>
 <template>
-  <div class="container">s 123232233232
-
+  <div class="container">
+    <build-list :data="list"></build-list>
   </div>
 </template>
 
 <script>
 import BuildList from '@/components/BuildList/BuildList'
+import BTL from '@/common/api/btl'
 export default {
   components: { BuildList },
 
-  props: {
-  },
-
   data() {
     return {
+      list: []
     }
   },
 
   computed: {},
 
-  mounted() { },
+  mounted() {
+    this.init()
+  },
 
-  methods: {}
+  methods: {
+    async init() {
+      this.list = await BTL.buildingList()
+    }
+  }
 }
 </script>

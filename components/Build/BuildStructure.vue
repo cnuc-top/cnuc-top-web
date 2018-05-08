@@ -11,7 +11,6 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    clip-path: url('#structure-clip');
   }
 
   .build-layers {
@@ -51,12 +50,12 @@
 </style>
 <template>
   <div class="build-structure">
-    <div class="structure" :style="{width: width + 'px', height: height + 'px'}">
+    <div class="structure" :style="{width: width + 'px', height: height + 'px',  'clip-path': 'url(\'#' + code + '-clip'}">
       <div class="build-layers">
         <svg-path :width="width" :height="height" :path="path" id="structure-layers"></svg-path>
         <build-layer :height="layerHeight" v-for="(item, index) in layersDataNow" :key="index"></build-layer>
       </div>
-      <svg-path :clip="true" class="structure-clip" :width="width" :height="height" :path="path" id="structure-clip"></svg-path>
+      <svg-path :id="code + '-clip'" :clip="true" class="structure-clip" :width="width" :height="height" :path="path"></svg-path>
     </div>
   </div>
 </template>
@@ -68,6 +67,7 @@ export default {
   components: { BuildLayer, SvgPath },
 
   props: {
+    code: String,
     width: Number,
     height: Number,
     path: String,
