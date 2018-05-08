@@ -1,11 +1,20 @@
 <style lang='stylus'>
 .build-item {
-  border: 1px solid #EEE;
+  text-align: center;
+
+  &__title {
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  &_height {
+  }
 }
 </style>
 <template>
   <div class="build-item">
-    {{data.name}}
+    <h2 class="build-item__title">{{data.name}}</h2>
+    <h3 class="build-item__height">{{data.height}}M</h3>
     <build :data="data"></build>
   </div>
 </template>

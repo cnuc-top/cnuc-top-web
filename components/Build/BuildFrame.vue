@@ -17,7 +17,7 @@
 </style>
 <template>
   <div class="build-frame" :style="{width: width + 'px', height: height + 'px'}">
-    <svg-path v-for="(item, index) in secounds" :key="index" :width="width" :height="height" :path="item[0]"></svg-path>
+    <svg-path v-for="(item, index) in secounds" :key="index" :width="width" :height="height" :path="item.content"></svg-path>
   </div>
 </template>
 

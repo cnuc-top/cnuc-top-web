@@ -1,5 +1,7 @@
 <style lang='stylus'>
 .build-base {
+  height: 100px;
+
   &__cube {
     width: 100px;
     height: 20px;
@@ -57,7 +59,7 @@ export default {
       return this.width + 40
     },
     barsHeight() {
-      return parseInt(this.height / 10)
+      return parseInt(this.height / 7)
     }
   },
   mounted() {
@@ -91,7 +93,7 @@ export default {
       }
 
       if (num === 0) {
-        const first =  Math.round((math - num) * barsHeight)
+        const first = Math.round((math - num) * barsHeight)
         this.$set(bars, barsRandom[0], first)
       }
 

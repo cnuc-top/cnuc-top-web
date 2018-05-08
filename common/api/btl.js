@@ -11,7 +11,27 @@ export default {
   },
   buildingId: function buildingId(id) {
     return request({
-      url: `${base}/v2/buildings/${id}`,
+      url: `${base}/v1/buildings/${id}`,
+      method: 'get'
+    })
+  },
+  addProcess: function addProcess(data) {
+    return request({
+      url: `${base}/v1/process`,
+      method: 'post',
+      data
+    })
+  },
+  addContribute: function addContribute(data) {
+    return request({
+      url: `${base}/v1/contributes`,
+      method: 'post',
+      data
+    })
+  },
+  uploadToken: function uploadToken() {
+    return request({
+      url: `${base}/v1/upload/token`,
       method: 'get'
     })
   }

@@ -1,11 +1,10 @@
 <style lang='stylus'>
 .build {
-  width: 300px;
+  width: 200px;
   height: 650px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  // align-items: center;
 }
 
 .build-top {
@@ -40,7 +39,7 @@
       <div class="build-main" :style="{width: data.width + 'px', height: data.height + 'px'}">
         <build-structure :code="data.code" v-show="form.showStructure" :path="structure" :width="data.width" :height="data.height" :layers="data.layers" :layersNow="process.layers"></build-structure>
         <build-secound :width="data.width" :height="data.height" :layers="data.layers" :secounds="secounds" :process="process.seconds"></build-secound>
-        <build-frame v-show="form.showFrame" :width="data.width" :height="data.height" :secounds="secounds"></build-frame>
+        <build-frame  v-show="form.showFrame" :width="data.width" :height="data.height" :secounds="secounds"></build-frame>
       </div>
     </div>
     <build-base v-show="form.showBase" :process="process.basic" :width="data.width" :height="data.height"></build-base>
@@ -56,7 +55,8 @@ export default {
   components: { BuildBase, BuildStructure, BuildSecound, BuildFrame },
 
   props: {
-    data: Object
+    data: Object,
+    process: Object
   },
 
   data() {
@@ -65,12 +65,12 @@ export default {
         showFrame: true,
         showBase: true,
         showStructure: true
-      },
-      process: {
-        layers: this.data.layers,
-        seconds: this.data.layers,
-        basic: 100,
       }
+      // process: {
+      //   layers: parseInt(this.data.layers * .7),
+      //   seconds: parseInt(this.data.layers * .5),
+      //   basic: 100,
+      // }
     }
   },
 
