@@ -3,7 +3,7 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'CNUC.TOP - 第一城建',
+    title: 'CNUC.TOP - 中国城建',
 
     meta: [
       { charset: 'utf-8' },

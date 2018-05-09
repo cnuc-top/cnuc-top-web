@@ -1,14 +1,12 @@
 <style lang='stylus'>
 .build {
   width: 200px;
-  height: 650px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
 }
 
 .build-top {
-  // height: 600px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

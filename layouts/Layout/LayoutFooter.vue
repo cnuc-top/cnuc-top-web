@@ -82,6 +82,7 @@
         font-weight: 600;
         margin-bottom: 10px;
       }
+
       margin-bottom: 5px;
 
       a {
@@ -136,7 +137,7 @@
             </el-col>
             <el-col :span="6">
               <ul class="nav-list">
-                <li class="nav-item is-title">城建论坛</li>
+                <li class="nav-item is-title">相关网站</li>
                 <li class="nav-item">
                   <a>宁波城建论坛</a>
                 </li>
@@ -148,10 +149,23 @@
                 </li>
               </ul>
             </el-col>
+
             <el-col :span="6">
-              <logo-text></logo-text>
+              <ul class="nav-list">
+                <li class="nav-item is-title">技术支持</li>
+                <li class="nav-item">
+                  <a>GitHub</a>
+                </li>
+                <li class="nav-item">
+                  <a>17Disney</a>
+                </li>
+                <li class="nav-item">
+                  <a>一起神奇</a>
+                </li>
+              </ul>
             </el-col>
             <el-col :span="6">
+              <logo-text></logo-text>
             </el-col>
           </el-row>
 

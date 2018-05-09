@@ -44,7 +44,7 @@
 
 .el-aside {
   position: relative;
-  height: 800px;
+  height: auto;
   z-index: 1;
   background: #FFF;
   margin-top: -250px;
@@ -53,9 +53,7 @@
 }
 </style>
 <template>
-
   <div>
-
     <el-dialog title="提示" :visible.sync="processDialog.visible">
       <div class="nb-form--process">
         <el-form :model="processForm" label-width="100px">
@@ -75,39 +73,9 @@
         </el-form>
         <build v-if="data && data.name" :data="data" :process="processForm"></build>
       </div>
-
       <span slot="footer" class="dialog-footer">
         <el-button @click="processDialog.visible = false">取 消</el-button>
         <el-button type="primary" @click="handleAddProcess">确 定</el-button>
-      </span>
-    </el-dialog>
-
-    <el-dialog title="提示" :visible.sync="contributeDialog.visible">
-      <el-form :model="contribute" label-width="100px">
-        <el-form-item label="图片">
-          <el-upload :on-success="uploadSuccess" class="upload-demo" :data="{'token': token}" drag action="https://upload.qiniup.com">
-            <img v-if="contribute.picUrl" :src="contribute.picUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="内容">
-          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="contribute.content">
-          </el-input>
-        </el-form-item>
-        <el-form-item label="时间">
-          <el-date-picker v-model="contribute.date" type="date" placeholder="选择日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="类型">
-          <el-radio-group v-model="contribute.type" size="small">
-            <el-radio v-for="(item, index) in CONTRIBUTE_TYPE_DETAIL" :key="index" :label="item.id" border>{{item.name}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="contributeDialog.visible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAddContribute">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -127,18 +95,17 @@
             <build v-if="data && data.name" :data="data" :process="process"></build>
           </div>
         </el-aside>
-
         <el-main>
           <div class="nb-main">
+            <el-slider :format-tooltip="processTooltip" v-model="processNum" :max="processes.length - 1"></el-slider>
             <el-button @click="processDialog.visible = true">添加进度</el-button>
             <el-button @click="contributeDialog.visible = true">添加贡献</el-button>
-            <process-list @click="handleClickProcesses" :data="processes"></process-list>
+            <!-- <process-list @click="handleClickProcesses" :data="processes"></process-list> -->
             <post-list :data="contributes"></post-list>
           </div>
         </el-main>
       </el-container>
     </div>
-
   </div>
 </template>
 
@@ -165,6 +132,7 @@ export default {
       processDialog: {
         visible: false
       },
+      processNum: null,
       process: {},
       processes: [],
 
@@ -186,6 +154,12 @@ export default {
     }
   },
 
+  watch: {
+    processNum: function (val) {
+      this.process = this.processes[val]
+    }
+  },
+
   computed: {},
 
   async mounted() {
@@ -194,9 +168,7 @@ export default {
     const data = await BTL.buildingId(id)
 
     this.data = data
-
     this.initProcesses(data.processes)
-
     this.contributes = await BTL.buildingIdContribute(id)
 
     const { uploadToken } = await BTL.uploadToken()
@@ -204,6 +176,11 @@ export default {
   },
 
   methods: {
+    processTooltip(val) {
+      if (this.processes[val]) {
+        return this.processes[val]['viewDate']
+      }
+    },
     handleClickProcesses(data) {
       this.process = data
     },
@@ -234,7 +211,7 @@ export default {
           const bSecondsStep = (seconds - bSeconds) / diff
 
           for (let i = 1; i < diff; i++) {
-            const _date = moment(bDate).add(i, 'month').format('YYYY-MM')
+            const _date = moment(bDate).add(i, 'month').format('YYYY年MM月')
             list.push({
               viewDate: _date,
               basic: Math.round(bBasic + bBasicStep * i),
