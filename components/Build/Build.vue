@@ -8,7 +8,7 @@
 }
 
 .build-top {
-  height: 600px;
+  // height: 600px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -37,12 +37,12 @@
   <div class="build" v-if="data">
     <div class="build-top">
       <div class="build-main" :style="{width: data.width + 'px', height: data.height + 'px'}">
-        <build-structure :code="data.code" v-show="form.showStructure" :path="structure" :width="data.width" :height="data.height" :layers="data.layers" :layersNow="process.layers"></build-structure>
+        <build-structure :code="data.code" v-show="visibles.showStructure" :path="structure" :width="data.width" :height="data.height" :layers="data.layers" :layersNow="process.layers"></build-structure>
         <build-secound :width="data.width" :height="data.height" :layers="data.layers" :secounds="secounds" :process="process.seconds"></build-secound>
-        <build-frame  v-show="form.showFrame" :width="data.width" :height="data.height" :secounds="secounds"></build-frame>
+        <build-frame v-show="visibles.showFrame" :width="data.width" :height="data.height" :secounds="secounds"></build-frame>
       </div>
     </div>
-    <build-base v-show="form.showBase" :process="process.basic" :width="data.width" :height="data.height"></build-base>
+    <build-base v-show="visibles.showBase" :process="process.basic" :width="data.width" :height="data.height"></build-base>
   </div>
 </template>
 
@@ -56,16 +56,30 @@ export default {
 
   props: {
     data: Object,
-    process: Object
+    visibles: {
+      type: Object,
+      default: function () {
+        return {
+          showFrame: true,
+          showBase: true,
+          showStructure: true
+        }
+      }
+    },
+    process: {
+      type: Object,
+      default: function () {
+        return {
+          basic: 100,
+          layers: this.data.layers
+        }
+      }
+    }
   },
 
   data() {
     return {
-      form: {
-        showFrame: true,
-        showBase: true,
-        showStructure: true
-      }
+
       // process: {
       //   layers: parseInt(this.data.layers * .7),
       //   seconds: parseInt(this.data.layers * .5),

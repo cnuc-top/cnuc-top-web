@@ -1,17 +1,17 @@
 <style lang='stylus'>
 .build-base {
-  height: 100px;
+  // height: 100px;
 
   &__cube {
     width: 100px;
     height: 20px;
     margin: 0 auto;
-    background: #AAA;
+    background: #333;
   }
 
   &__ground {
     height: 20px;
-    background: #CCC;
+    background: #666;
   }
 
   &__bars {
@@ -23,7 +23,7 @@
 
   &__bar {
     width: 1px;
-    background: #CCC;
+    background: #999;
     transition: 0.15s;
   }
 }

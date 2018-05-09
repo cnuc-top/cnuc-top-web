@@ -26,7 +26,7 @@ export default {
 
   methods: {
     async init() {
-      this.list = await BTL.buildingList()
+      this.list = await BTL.buildingList({ city: '宁波' })
     }
   }
 }

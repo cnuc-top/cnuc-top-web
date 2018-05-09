@@ -1,18 +1,21 @@
 <style lang='stylus'>
-$header-height = 72px;
+@require '../../styles/cnuc/var/color.styl';
+
+$header-height = 64px;
 
 .header {
   height: $header-height;
   width: 100%;
   position: relative;
-  background: #EEE;
+  background: $color-primary;
 
   .logo-text {
     margin-top: 15px;
-    height: 50px;
-
+    svg{
+      height: 28px
+    }
     path {
-      fill: $color-primary;
+      fill: rgba(255, 255, 255, .8);
     }
   }
 
@@ -21,16 +24,8 @@ $header-height = 72px;
   }
 
   .logo {
-    margin: 0;
     float: left;
-    font-size: 32px;
-    font-weight: 400;
     cursor: pointer;
-    margin-top: 15px;
-
-    svg {
-      width: 100px;
-    }
   }
 
   .nav {
