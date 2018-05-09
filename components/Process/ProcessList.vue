@@ -4,7 +4,7 @@
 </style>
 <template>
   <div class="process-list">
-    <process-item v-for="(item, index) in data" :key="index" :data="item"></process-item>
+    <process-item @click="handleClick" v-for="(item, index) in data" :key="index" :data="item"></process-item>
   </div>
 </template>
 
@@ -26,6 +26,10 @@ export default {
 
   mounted() { },
 
-  methods: {}
+  methods: {
+    handleClick(data) {
+      this.$emit('click', data)
+    }
+  }
 }
 </script>

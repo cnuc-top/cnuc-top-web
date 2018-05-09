@@ -1,17 +1,38 @@
 <style lang='stylus'>
+@require '../../styles/cnuc/var/color.styl';
+
 .nb-form {
   &--process {
     width: 400px;
+    background: #EEE;
   }
+}
+
+.nb-header {
+  background: #DDD;
+  padding: 30px 0;
+  padding-bottom: 100px;
+
+  &__title {
+    font-size: 30px;
+  }
+}
+
+.el-aside {
+  position: relative;
+  z-index: 1;
+  background: #FFF;
+  margin-top: -30px;
+  padding: 10px 30px;
+  border: 2px solid $color-primary;
 }
 </style>
 <template>
 
-  <div class="container">
+  <div>
 
     <el-dialog title="提示" :visible.sync="processDialog.visible">
       <div class="nb-form--process">
-        <el-button @click="handleOpenAddProcess">更新进度</el-button>
         <el-form :model="processForm" label-width="100px">
           <el-form-item label="基础结构">
             <el-slider v-model="processForm.basic"></el-slider>
@@ -27,7 +48,7 @@
             </el-date-picker>
           </el-form-item>
         </el-form>
-         <build v-if="data && data.name" :data="data" :process="processForm"></build>
+        <build v-if="data && data.name" :data="data" :process="processForm"></build>
       </div>
 
       <span slot="footer" class="dialog-footer">
@@ -66,25 +87,32 @@
     </el-dialog>
 
     <div class="nb-header">
-      {{data.name}}
+      <div class="container">
+        <div class="nb-header__title">
+          {{data.name}}
+        </div>
+      </div>
     </div>
 
-    <el-container>
-      <el-aside>
-        <build v-if="data && data.name" :data="data" :process="processForm"></build>
+    <div class="container">
+      <el-container>
+        <el-aside>
+          <div class="nb-aside">
+            <build v-if="data && data.name" :data="data" :process="process"></build>
+            {{process}}
+          </div>
+        </el-aside>
 
-        <process-list :data="data.processes"></process-list>
-      </el-aside>
-
-      <el-main>
-        <div class="nb-main">
-          <el-button @click="processDialog.visible = true">添加进度</el-button>
-          <el-button @click="contributeDialog.visible = true">添加贡献</el-button>
-          <nb-process :data="data.processes"></nb-process>
-          <post-list :data="contributes"></post-list>
-        </div>
-      </el-main>
-    </el-container>
+        <el-main>
+          <div class="nb-main">
+            <el-button @click="processDialog.visible = true">添加进度</el-button>
+            <el-button @click="contributeDialog.visible = true">添加贡献</el-button>
+            <process-list @click="handleClickProcesses" :data="processes"></process-list>
+            <post-list :data="contributes"></post-list>
+          </div>
+        </el-main>
+      </el-container>
+    </div>
 
   </div>
 </template>
@@ -95,6 +123,7 @@ import BTL from '@/common/api/btl'
 import Build from '@/components/Build/Build'
 import ProcessList from '@/components/Process/ProcessList'
 import PostList from '@/components/Post/PostList'
+import moment from 'moment'
 export default {
   components: { Build, ProcessList, PostList },
 
@@ -111,6 +140,9 @@ export default {
       processDialog: {
         visible: false
       },
+      process: {},
+      processes: [],
+
       contributeDialog: {
         visible: false
       },
@@ -134,7 +166,12 @@ export default {
   async mounted() {
     const { id } = this.$route.params
     this.id = id
-    this.data = await BTL.buildingId(id)
+    const data = await BTL.buildingId(id)
+
+    this.data = data
+
+    this.initProcesses(data.processes)
+
     this.contributes = await BTL.buildingIdContribute(id)
 
     const { uploadToken } = await BTL.uploadToken()
@@ -142,6 +179,9 @@ export default {
   },
 
   methods: {
+    handleClickProcesses(data) {
+      this.process = data
+    },
     async handleAddProcess() {
       const form = this.processForm
       form.bid = this.id
@@ -154,6 +194,44 @@ export default {
     },
     uploadSuccess(res) {
       this.contribute.picUrl = `http://cdn.cnuc.top/${res.hash}`
+    },
+
+    initProcesses(data) {
+      const list = []
+      data.forEach((item, index) => {
+
+        if (index > 0) {
+          const { date, basic, layers, seconds, } = item
+          const { date: bDate, basic: bBasic, layers: bLayers, seconds: bSeconds } = data[index - 1]
+          const diff = moment(date).diff(moment(bDate), 'month')
+
+          console.log(diff)
+
+          const bBasicStep = (basic - bBasic) / diff
+          const bLayersStep = (layers - bLayers) / diff
+          const bSecondsStep = (seconds - bSeconds) / diff
+
+          for (let i = 1; i < diff; i++) {
+            const _date = moment(bDate).add(i, 'month').format('YYYY-MM')
+            list.push({
+              viewDate: _date,
+              basic: Math.round(bBasic + bBasicStep * i),
+              layers: Math.round(bLayers + bLayersStep * i),
+              seconds: Math.round(bSeconds + bSecondsStep * i)
+            })
+          }
+
+          list.push(item)
+
+        } else {
+          list.push(item)
+        }
+
+      })
+
+      console.log(list)
+      this.processes = list
+
     }
   }
 }

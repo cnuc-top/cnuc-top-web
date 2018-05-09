@@ -7,15 +7,17 @@ $header-height = 64px;
   height: $header-height;
   width: 100%;
   position: relative;
-  background: $color-primary;
+  background: #EEE;
 
   .logo-text {
     margin-top: 15px;
-    svg{
-      height: 28px
+
+    svg {
+      height: 28px;
     }
+
     path {
-      fill: rgba(255, 255, 255, .8);
+      fill: rgba(0, 0, 0, 0.8);
     }
   }
 
@@ -41,9 +43,11 @@ $header-height = 64px;
   <div class="header">
     <div class="container">
       <h1 class="logo">
-        <el-tooltip effect="dark" content="返回首页" placement="bottom">
-          <logo-text></logo-text>
-        </el-tooltip>
+        <router-link to="/">
+          <el-tooltip effect="dark" content="返回首页" placement="bottom">
+            <logo-text></logo-text>
+          </el-tooltip>
+        </router-link>
       </h1>
       <ul class="nav">
 
