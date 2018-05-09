@@ -25,7 +25,7 @@ module.exports = {
   ** Customize the progress bar color
   */
   css: ['~styles/cnuc/index.styl'],
-  plugins: ['~plugins/element-ui'],
+  plugins: ['~plugins/element-ui', '~plugins/filter'],
   loading: { color: '#3B8070' },
   /*
   ** Build configuration

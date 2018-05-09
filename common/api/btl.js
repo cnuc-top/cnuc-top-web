@@ -15,6 +15,14 @@ export default {
       method: 'get'
     })
   },
+
+  buildingIdContribute: function buildingIdContribute(id) {
+    return request({
+      url: `${base}/v1/buildings/${id}/contributes`,
+      method: 'get'
+    })
+  },
+
   addProcess: function addProcess(data) {
     return request({
       url: `${base}/v1/process`,
