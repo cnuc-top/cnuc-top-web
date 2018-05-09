@@ -1,6 +1,5 @@
 <style lang='stylus'>
 .build-structure {
-  height: 800px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

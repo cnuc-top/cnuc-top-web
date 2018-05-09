@@ -10,20 +10,45 @@
 
 .nb-header {
   background: #DDD;
-  padding: 30px 0;
-  padding-bottom: 100px;
+  background-size: 100% auto;
+  background-position: center;
+  overflow: hidden;
+  position: relative;
 
   &__title {
-    font-size: 30px;
+    position: absolute;
+    bottom: 300px;
+    left: 0px;
+    z-index: 100;
+    color: #FFF;
+    font-size: 35px;
+    letter-spacing: 5px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  }
+
+  .cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(#333, 0.4) 50%, rgba(#333, 0.5) 0%);
+    background-size: 100% 5px;
+  }
+
+  .container {
+    height: 500px;
+    position: relative;
   }
 }
 
 .el-aside {
   position: relative;
+  height: 800px;
   z-index: 1;
   background: #FFF;
-  margin-top: -30px;
-  padding: 10px 30px;
+  margin-top: -250px;
+  padding: 30px 10px;
   border: 2px solid $color-primary;
 }
 </style>
@@ -86,7 +111,8 @@
       </span>
     </el-dialog>
 
-    <div class="nb-header">
+    <div class="nb-header" :style="{'background-image': 'url(' + data.picUrl + ')'}">
+      <div class="cover"></div>
       <div class="container">
         <div class="nb-header__title">
           {{data.name}}
@@ -99,7 +125,6 @@
         <el-aside>
           <div class="nb-aside">
             <build v-if="data && data.name" :data="data" :process="process"></build>
-            {{process}}
           </div>
         </el-aside>
 
@@ -204,9 +229,6 @@ export default {
           const { date, basic, layers, seconds, } = item
           const { date: bDate, basic: bBasic, layers: bLayers, seconds: bSeconds } = data[index - 1]
           const diff = moment(date).diff(moment(bDate), 'month')
-
-          console.log(diff)
-
           const bBasicStep = (basic - bBasic) / diff
           const bLayersStep = (layers - bLayers) / diff
           const bSecondsStep = (seconds - bSeconds) / diff
@@ -220,18 +242,12 @@ export default {
               seconds: Math.round(bSeconds + bSecondsStep * i)
             })
           }
-
           list.push(item)
-
         } else {
           list.push(item)
         }
-
       })
-
-      console.log(list)
       this.processes = list
-
     }
   }
 }
