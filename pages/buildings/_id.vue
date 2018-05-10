@@ -95,7 +95,7 @@
 
     <el-container>
       <el-aside>
-        <div class="nb-aside">
+        <div class="nb-aside" :class="{'is-fixed': fixed}">
           <h1 class="nb-aside__title">{{data.name}}</h1>
           <build v-if="data && data.name" :data="data" :process="process"></build>
           <build-desc :data="descList"></build-desc>
@@ -159,6 +159,7 @@ export default {
       wHeight: null,
       CONTRIBUTE_TYPE,
       CONTRIBUTE_TYPE_DETAIL,
+      fixed: false,
       id: null,
       data: {},
       descList: [],
@@ -202,6 +203,7 @@ export default {
   computed: {},
 
   async mounted() {
+    window.addEventListener('scroll', this.handleScroll)
     const { id } = this.$route.params
     this.id = id
     const data = await BTL.buildingId(id)
@@ -233,6 +235,14 @@ export default {
   },
 
   methods: {
+    handleScroll() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      if (scrollTop > 64) {
+        this.fixed = true
+      } else {
+        this.fixed = false
+      }
+    },
     async initContribute() {
       const data = await BTL.buildingIdContribute(this.id)
       const count = {
