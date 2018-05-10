@@ -98,7 +98,7 @@
           <h1 class="nb-aside__title">{{data.name}}</h1>
           <build v-if="data && data.name" :data="data" :process="process"></build>
           <build-desc :data="descList"></build-desc>
-          <process-list @click="handleClickProcesses" :data="processes"></process-list>
+          <process-list @click="handleClickProcesses" :count="contributesCount" :data="processes"></process-list>
         </div>
       </el-aside>
       <el-main>
@@ -140,6 +140,7 @@ import ProcessList from '@/components/Process/ProcessList'
 import PostList from '@/components/Post/PostList'
 import PostItem from '@/components/Post/PostItem'
 import moment from 'moment'
+import { thisExpression } from 'babel-types';
 export default {
   components: {
     Build,
@@ -162,10 +163,12 @@ export default {
       descList: [],
       token: null,
       contributes: [],
+      contributesCount: {},
       processDialog: {
         visible: false
       },
       processNum: null,
+      yearRange: [],
       process: {},
       processes: [],
 
@@ -217,7 +220,7 @@ export default {
     this.descList = descList
 
     this.data = data
-    this.initProcesses(data.processes)
+    await this.initProcesses(data.processes)
     this.initContribute()
 
     const { uploadToken } = await BTL.uploadToken()
@@ -227,8 +230,29 @@ export default {
   methods: {
     async initContribute() {
       const data = await BTL.buildingIdContribute(this.id)
+      const count = {
+        demo: 0,
+        finish: 0
+      }
       const list = []
+
       data.forEach(item => {
+        const { date, type } = item
+        const year = moment(date).format('YYYY')
+        if (type === 1) {
+          count.demo = count.demo + 1
+        } else {
+          if (year > this.yearRange[1]) {
+            count.finish = count.finish + 1
+          } else {
+            if (count[year]) {
+              count[year] = count[year] + 1
+            } else {
+              count[year] = 1
+            }
+          }
+        }
+
         const image = new Image()
         image.src = item.picUrl
         image.onload = function () {
@@ -238,7 +262,9 @@ export default {
           list.push(item)
         }
       })
+
       this.contributes = list
+      this.contributesCount = count
       this.wHeight = document.body.clientHeight
     },
 
@@ -266,6 +292,16 @@ export default {
 
     initProcesses(data) {
       const list = []
+      const startYear = moment(data[0]['date']).format('YYYY')
+      const endYear = moment(data[data.length - 1]['date']).format('YYYY')
+
+      this.descList.push({
+        name: '周期',
+        value: `${startYear}年 - ${endYear}年`
+      })
+      this.yearRange = [startYear, endYear]
+
+
       data.forEach((item, index) => {
 
         if (index > 0) {

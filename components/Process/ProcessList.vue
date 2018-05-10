@@ -2,15 +2,37 @@
 @require '../../styles/cnuc/var/color.styl';
 
 .process-list {
-  border-top: 1px solid $color-light-grey-ss;
+  border: 1px solid $color-light-grey-ss;
   margin-top: 24px;
+  background: #FFF;
+  border-radius: 5px;
+
+  .process-item {
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba($color-light-grey-ss, 0.5);
+    }
+  }
 }
 </style>
 <template>
   <div class="process-list">
-    <process-item @click="handleClick" v-for="(item, index) in list" :key="index" :data="item"></process-item>
-    <div class="process-item">已建成</div>
-    <div class="process-item">效果图</div>
+    <div class="process-item">
+      <div class="process-item__name">
+        效果图
+      </div>
+      <div class="process-item__count">
+        {{count['demo']}}
+      </div>
+    </div>
+    <process-item @click="handleClick" v-for="(item, index) in list" :count="count[item.year]" :key="index" :data="item"></process-item>
+    <div class="process-item">
+      <div class="process-item__name">
+        建成图
+      </div>
+      <div class="process-item__count">
+        {{count['finish']}}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -23,6 +45,7 @@ export default {
 
   props: {
     data: Array,
+    count: Object,
     mode: {
       type: String,
       default: 'year'
@@ -42,6 +65,7 @@ export default {
       this.data.forEach(item => {
         const { viewDate } = item
         const year = moment(viewDate, 'YYYY年MM月DD日').format('YYYY')
+        item.year = year
 
         if (!map.has(year)) {
           list.push(item)
@@ -56,6 +80,8 @@ export default {
 
   methods: {
     handleClick(data) {
+      list.find(_ => _.active)['active'] = false
+      data.active = true
       this.$emit('click', data)
     }
   }
