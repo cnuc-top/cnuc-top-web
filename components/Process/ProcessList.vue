@@ -16,9 +16,7 @@
 </style>
 <template>
   <div class="process-list">
-
-    <process-item :active="{'is-active': item.year === active}" @click="handleClick" v-for="(item, index) in data" :key="index" :data="item"></process-item>
-
+    <process-item :class="{'is-active': item.year === active}" @click="handleClick" v-for="(item, index) in data" :key="index" :data="item"></process-item>
   </div>
 </template>
 
@@ -53,8 +51,6 @@ export default {
 
   methods: {
     handleClick(data) {
-      list.find(_ => _.active)['active'] = false
-      data.active = true
       this.$emit('click', data)
     }
   }

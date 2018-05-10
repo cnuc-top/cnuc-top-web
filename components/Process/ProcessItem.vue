@@ -13,6 +13,11 @@
     background: rgba($color-light-grey-ss, 0.5);
   }
 
+  &.is-active {
+    font-weight: 600;
+    background: rgba($color-light-grey-ss, 0.5);
+  }
+
   &__name {
     // flex: 1;
     margin-right: 10px;

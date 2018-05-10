@@ -279,6 +279,8 @@ export default {
       }
     },
     handleClickProcesses(data) {
+      console.log(data)
+
       this.processesActive = data.year
       this.process = data
     },
@@ -295,18 +297,14 @@ export default {
     uploadSuccess(res) {
       this.contribute.picUrl = `http://cdn.cnuc.top/${res.hash}`
     },
-
     initProcesses(data) {
       const list = []
       const startYear = moment(data[0]['date']).format('YYYY')
       const endYear = moment(data[data.length - 1]['date']).format('YYYY')
-
       this.descList.push({
         name: '周期',
         value: `${startYear}年 - ${endYear}年`
       })
-
-
       data.forEach((item, index) => {
         if (index > 0) {
           const { date, basic, layers, seconds, } = item
@@ -337,8 +335,6 @@ export default {
     initProcessesList() {
       const processesList = []
       const { contributesCount: count, processes } = this
-
-
       if (count['demo'] > 0) {
         processesList.push({
           year: '效果图',
@@ -346,7 +342,6 @@ export default {
         })
       }
       const map = new Set()
-
       processes.forEach(item => {
         const { viewDate } = item
         const year = moment(viewDate, 'YYYY年MM月DD日').format('YYYY')
@@ -365,14 +360,8 @@ export default {
           count: count['finish']
         })
       }
-      console.log(processesList)
-
       this.processesList = processesList
-
-
-
     }
-
   }
 }
 </script>
