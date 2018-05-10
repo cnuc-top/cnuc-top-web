@@ -33,12 +33,12 @@
 }
 </style>
 <template>
-  <div class="process-item" :class="{'is-active': data.active === true }" @click="handleClick(data)">
+  <div class="process-item" @click="handleClick(data)">
     <div class="process-item__name">
-      {{data.viewDate | timeFormat('YYYY年', 'YYYY年MM月DD日')}}
+      {{data.year}}
     </div>
-    <div v-if="count" class="process-item__count">
-      {{count}}
+    <div v-if="data.count" class="process-item__count">
+      {{data.count}}
     </div>
   </div>
 </template>

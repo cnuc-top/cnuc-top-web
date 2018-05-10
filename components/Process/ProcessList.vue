@@ -16,23 +16,9 @@
 </style>
 <template>
   <div class="process-list">
-    <div class="process-item">
-      <div class="process-item__name">
-        效果图
-      </div>
-      <div class="process-item__count">
-        {{count['demo']}}
-      </div>
-    </div>
-    <process-item @click="handleClick" v-for="(item, index) in list" :count="count[item.year]" :key="index" :data="item"></process-item>
-    <div class="process-item">
-      <div class="process-item__name">
-        建成图
-      </div>
-      <div class="process-item__count">
-        {{count['finish']}}
-      </div>
-    </div>
+
+    <process-item :active="{'is-active': item.year === active}" @click="handleClick" v-for="(item, index) in data" :key="index" :data="item"></process-item>
+
   </div>
 </template>
 
@@ -45,7 +31,7 @@ export default {
 
   props: {
     data: Array,
-    count: Object,
+    active: String,
     mode: {
       type: String,
       default: 'year'
@@ -54,29 +40,16 @@ export default {
 
   data() {
     return {
+
     }
   },
 
   computed: {
-    list() {
-      const map = new Set()
-      const list = []
 
-      this.data.forEach(item => {
-        const { viewDate } = item
-        const year = moment(viewDate, 'YYYY年MM月DD日').format('YYYY')
-        item.year = year
-
-        if (!map.has(year)) {
-          list.push(item)
-          map.add(year)
-        }
-      })
-      return list
-    }
   },
 
-  mounted() { },
+  mounted() {
+  },
 
   methods: {
     handleClick(data) {

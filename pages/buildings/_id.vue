@@ -64,25 +64,26 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="添加贡献" :visible.sync="contributeDialog.visible">
+    <el-dialog title="添加贡献" width="600px" :visible.sync="contributeDialog.visible">
       <el-form :model="contribute" label-width="100px">
         <el-form-item label="图片">
           <el-upload :on-success="uploadSuccess" class="upload-demo" :data="{'token': token}" drag action="https://upload.qiniup.com">
             <img v-if="contribute.picUrl" :src="contribute.picUrl" class="avatar">
           </el-upload>
         </el-form-item>
-        <el-form-item label="内容">
-          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="contribute.content">
-          </el-input>
+
+        <el-form-item label="类型">
+          <el-radio-group v-model="contribute.type">
+            <el-radio v-for="(item, index) in CONTRIBUTE_TYPE_DETAIL" :key="index" :label="item.id" border>{{item.name}}</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="时间">
+        <el-form-item v-show="contribute.type === CONTRIBUTE_TYPE.PROCESS" label="时间">
           <el-date-picker v-model="contribute.date" type="date" placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="类型">
-          <el-radio-group v-model="contribute.type" size="small">
-            <el-radio v-for="(item, index) in CONTRIBUTE_TYPE_DETAIL" :key="index" :label="item.id" border>{{item.name}}</el-radio>
-          </el-radio-group>
+        <el-form-item label="进度简介">
+          <el-input type="textarea" :rows="1" placeholder="进度简介" v-model="contribute.content">
+          </el-input>
         </el-form-item>
       </el-form>
 
@@ -98,7 +99,7 @@
           <h1 class="nb-aside__title">{{data.name}}</h1>
           <build v-if="data && data.name" :data="data" :process="process"></build>
           <build-desc :data="descList"></build-desc>
-          <process-list @click="handleClickProcesses" :count="contributesCount" :data="processes"></process-list>
+          <process-list @click="handleClickProcesses" :active="processesActive" :data="processesList"></process-list>
         </div>
       </el-aside>
       <el-main>
@@ -116,7 +117,6 @@
             <el-button @click="processDialog.visible = true">添加进度</el-button>
             <el-button @click="contributeDialog.visible = true">添加贡献</el-button>
           </div>
-
           <waterfall class="post-water" :line-gap="412" :watch="contributes">
             <waterfall-slot :width="item.width" :height="item.height" v-for="(item, index) in contributes" :order="index" :key="index">
               <post-item :data="item"></post-item>
@@ -132,7 +132,7 @@
 import Waterfall from '@/components/lib/waterfall'
 import WaterfallSlot from '@/components/lib/waterfall-slot'
 
-import { CONTRIBUTE_TYPE_DETAIL } from '@/common/const'
+import { CONTRIBUTE_TYPE, CONTRIBUTE_TYPE_DETAIL } from '@/common/const'
 import BTL from '@/common/api/btl'
 import Build from '@/components/Build/Build'
 import BuildDesc from '@/components/Build/BuildDesc'
@@ -157,6 +157,7 @@ export default {
   data() {
     return {
       wHeight: null,
+      CONTRIBUTE_TYPE,
       CONTRIBUTE_TYPE_DETAIL,
       id: null,
       data: {},
@@ -164,6 +165,7 @@ export default {
       token: null,
       contributes: [],
       contributesCount: {},
+      processesActive: 'demo',
       processDialog: {
         visible: false
       },
@@ -171,6 +173,7 @@ export default {
       yearRange: [],
       process: {},
       processes: [],
+      processesList: [],
 
       contributeDialog: {
         visible: false
@@ -221,7 +224,9 @@ export default {
 
     this.data = data
     await this.initProcesses(data.processes)
-    this.initContribute()
+    await this.initContribute()
+
+    this.initProcessesList()
 
     const { uploadToken } = await BTL.uploadToken()
     this.token = uploadToken
@@ -274,6 +279,7 @@ export default {
       }
     },
     handleClickProcesses(data) {
+      this.processesActive = data.year
       this.process = data
     },
     async handleAddProcess() {
@@ -299,11 +305,9 @@ export default {
         name: '周期',
         value: `${startYear}年 - ${endYear}年`
       })
-      this.yearRange = [startYear, endYear]
 
 
       data.forEach((item, index) => {
-
         if (index > 0) {
           const { date, basic, layers, seconds, } = item
           const { date: bDate, basic: bBasic, layers: bLayers, seconds: bSeconds } = data[index - 1]
@@ -326,8 +330,49 @@ export default {
           list.push(item)
         }
       })
+      this.yearRange = [startYear, endYear]
       this.processes = list
+    },
+
+    initProcessesList() {
+      const processesList = []
+      const { contributesCount: count, processes } = this
+
+
+      if (count['demo'] > 0) {
+        processesList.push({
+          year: '效果图',
+          count: count['demo']
+        })
+      }
+      const map = new Set()
+
+      processes.forEach(item => {
+        const { viewDate } = item
+        const year = moment(viewDate, 'YYYY年MM月DD日').format('YYYY')
+        item.year = year
+        item.count = count[year] || 0
+
+        if (!map.has(year)) {
+          processesList.push(item)
+          map.add(year)
+        }
+      })
+
+      if (count['finish'] > 0) {
+        processesList.push({
+          year: '已建成',
+          count: count['finish']
+        })
+      }
+      console.log(processesList)
+
+      this.processesList = processesList
+
+
+
     }
+
   }
 }
 </script>
