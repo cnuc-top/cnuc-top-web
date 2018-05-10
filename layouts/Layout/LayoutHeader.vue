@@ -7,7 +7,11 @@ $header-height = 64px;
   height: $header-height;
   width: 100%;
   position: relative;
-  background: #EEE;
+  background: $color-primary-s;
+  z-index: 1;
+  // border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 1px 3px rgba(26, 26, 26, 0.1);
+  padding: 0 16px;
 
   .logo-text {
     margin-top: 15px;
@@ -17,7 +21,7 @@ $header-height = 64px;
     }
 
     path {
-      fill: rgba(0, 0, 0, 0.8);
+      fill: rgba(255, 255, 255, 0.9);
     }
   }
 

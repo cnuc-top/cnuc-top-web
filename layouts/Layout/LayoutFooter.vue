@@ -69,7 +69,7 @@
 .footer {
   margin-top: 32px;
   background: #f6f5f2;
-
+  position: relative;
   .nav-list {
     margin: 0px;
     padding: 0px;

@@ -1,7 +1,5 @@
 <style lang='stylus'>
 .build {
-  width: 200px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
 }

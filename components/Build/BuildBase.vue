@@ -6,12 +6,12 @@
     width: 100px;
     height: 20px;
     margin: 0 auto;
-    background: #333;
+    background: #666;
   }
 
   &__ground {
     height: 20px;
-    background: #666;
+    background: #999;
   }
 
   &__bars {
