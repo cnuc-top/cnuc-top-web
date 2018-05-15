@@ -1,8 +1,16 @@
 <style lang='stylus'>
+.list-loading {
+  height: 300px;
+}
+
+.page-index {
+  margin-top: 30px;
+}
 </style>
 <template>
-  <div class="container">
-    <build-list :data="list"></build-list>
+  <div class="container page-index">
+    <build-list v-if="list" :data="list"></build-list>
+    <div v-else v-loading="true" class="list-loading"></div>
   </div>
 </template>
 
@@ -14,7 +22,11 @@ export default {
 
   data() {
     return {
-      list: []
+      city: '宁波',
+      list: [],
+      page: 1,
+      limit: 10,
+      total: null,
     }
   },
 
@@ -26,7 +38,19 @@ export default {
 
   methods: {
     async init() {
-      this.list = await BTL.buildingList({ city: '宁波' })
+      const { city, page, limit } = this
+      const params = {
+        city,
+        page,
+        limit
+      }
+      const { data } = await BTL.buildingList(params)
+      const { list, total } = data
+      this.total = total
+
+      setTimeout(() => {
+        this.list = list
+      }, 500)
     }
   }
 }

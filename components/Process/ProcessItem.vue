@@ -8,6 +8,7 @@
   align-items: center;
   padding: 0 15px;
   height: 38px;
+  overflow: hidden;
 
   &:hover {
     background: rgba($color-light-grey-ss, 0.5);
@@ -19,10 +20,13 @@
   }
 
   &__name {
-    // flex: 1;
     margin-right: 10px;
-    // width: 80px;
     font-size: 14px;
+  }
+
+  svg {
+    width: 100px;
+    height: 14px;
   }
 
   &__count {
@@ -40,7 +44,12 @@
 <template>
   <div class="process-item" @click="handleClick(data)">
     <div class="process-item__name">
-      {{data.year}}
+      <span v-show="data.year">{{data.year}}</span>
+
+      <ContentLoader v-show="!data.year" :width="100" :height="14">
+        <rect x="0" y="0" rx="3" ry="3" :width="100" :height="14" />
+      </ContentLoader>
+
     </div>
     <div v-if="data.count" class="process-item__count">
       {{data.count}}
@@ -49,8 +58,11 @@
 </template>
 
 <script>
+import { ContentLoader } from 'vue-content-loader'
 export default {
-  components: {},
+  components: {
+    ContentLoader
+  },
 
   props: {
     count: Number,

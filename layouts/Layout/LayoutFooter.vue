@@ -70,6 +70,7 @@
   margin-top: 32px;
   background: #f6f5f2;
   position: relative;
+
   .nav-list {
     margin: 0px;
     padding: 0px;
@@ -115,10 +116,8 @@
     <div class="footer">
       <div class="footer__main">
         <div class="container">
-
           <el-row :gutter="20">
             <el-col :span="6">
-
               <ul class="nav-list">
                 <li class="nav-item is-title">高楼时间轴</li>
                 <li class="nav-item">
@@ -127,12 +126,6 @@
                 <li class="nav-item">
                   <a>上海</a>
                 </li>
-                <li class="nav-item">
-                  <a>北京</a>
-                </li>
-                <li class="nav-item">
-                  <a>深圳</a>
-                </li>
               </ul>
             </el-col>
             <el-col :span="6">
@@ -140,9 +133,6 @@
                 <li class="nav-item is-title">相关网站</li>
                 <li class="nav-item">
                   <a>宁波城建论坛</a>
-                </li>
-                <li class="nav-item">
-                  <a>高楼迷</a>
                 </li>
                 <li class="nav-item">
                   <a>嘉兴城建论坛</a>

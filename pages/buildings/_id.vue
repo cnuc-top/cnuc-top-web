@@ -6,7 +6,6 @@
   background-size: 100% auto;
   background-position: center;
   position: relative;
-  height: 300px;
 
   &__title {
     position: absolute;
@@ -25,22 +24,28 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(rgba(#333, 0.4) 50%, rgba(#333, 0.5) 0%);
+    background: linear-gradient(rgba(#000, 0.3) 50%, rgba(#000, 0.5) 0%);
     background-size: 100% 5px;
   }
 
   .container {
+    height: 300px;
     position: relative;
   }
 }
 
-.post-water {
-  margin: 0 -12px;
-  margin-top: -12px;
+.item-move {
+  transition: transform 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+.nb-aside{
+  padding 24px 0
+}
+.nb-main{
+  padding-top 24px
 }
 </style>
 <template>
-  <div class="container">
+  <div>
     <el-dialog title="进度" :visible.sync="processDialog.visible">
       <el-form :model="processForm" label-width="100px">
         <el-form-item label="基础结构">
@@ -93,36 +98,48 @@
       </span>
     </el-dialog>
 
-    <el-container>
-      <el-aside>
-        <div class="nb-aside" :class="{'is-fixed': fixed}">
-          <h1 class="nb-aside__title">{{data.name}}</h1>
-          <build v-if="data && data.name" :data="data" :process="process"></build>
-          <build-desc :data="descList"></build-desc>
-          <process-list @click="handleClickProcesses" :active="processesActive" :data="processesList"></process-list>
+    <div class="nb-header" :style="{'background-image': 'url(' + data.picUrl + ')'}">
+      <div class="cover"></div>
+      <div class="container">
+        <!-- <ContentLoader>
+          <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />
+        </ContentLoader> -->
+      </div>
+    </div>
+    <el-container class="container">
+      <el-aside class="nb-aside">
+        <div :class="{'is-fixed': fixed}">
+          <transition name="el-fade-in-linear">
+            <div class="build-box nb-card">
+              <build v-if="data && data.name" :data="data" :process="process"></build>
+            </div>
+          </transition>
+          <transition name="el-fade-in-linear">
+            <process-list @click="handleClickProcesses" :active="processesActive" :data="processesList"></process-list>
+          </transition>
         </div>
       </el-aside>
-      <el-main>
-        <div class="nb-main">
-          <!-- <div class="nb-card nb-header" :style="{'background-image': 'url(' + data.picUrl + ')'}">
-            <div class="cover"></div>
-          </div> -->
-          <div class="nb-card nb-timeline">
-            <div class="nb-card__title">建设进度</div>
-            <div class="form">
-              <el-slider :format-tooltip="processTooltip" v-model="processNum" :max="processes.length - 1"></el-slider>
-            </div>
+      <el-main class="nb-main">
+        <div class="nb-card nb-timeline">
+          <div class="nb-card__title">{{data.name}}</div>
+          <build-desc class="nb-card" :data="descList"></build-desc>
+          <div class="form">
+            <el-form label-position="left" label-width="120px">
+              <el-form-item label="建造过程（月）">
+                <el-slider show-input :format-tooltip="processTooltip" v-model="processNum" :max="processes.length - 1"></el-slider>
+              </el-form-item>
+            </el-form>
           </div>
-          <div class="nb-card nb-form">
-            <el-button @click="processDialog.visible = true">添加进度</el-button>
-            <el-button @click="contributeDialog.visible = true">添加贡献</el-button>
-          </div>
-          <waterfall class="post-water" :line-gap="412" :watch="contributes">
-            <waterfall-slot :width="item.width" :height="item.height" v-for="(item, index) in contributes" :order="index" :key="index">
-              <post-item :data="item"></post-item>
-            </waterfall-slot>
-          </waterfall>
         </div>
+        <div class="nb-card nb-form">
+          <el-button @click="processDialog.visible = true">添加进度</el-button>
+          <el-button @click="contributeDialog.visible = true">添加贡献</el-button>
+        </div>
+        <waterfall class="post-water" :line-gap="412" :watch="contributesActiveList">
+          <waterfall-slot v-for="(item, index) in contributesActiveList" :key="index" @click="handleClickContribute(item)" :width="item.width" :height="item.height" :order="index">
+            <post-item :data="item"></post-item>
+          </waterfall-slot>
+        </waterfall>
       </el-main>
     </el-container>
   </div>
@@ -131,8 +148,8 @@
 <script>
 import Waterfall from '@/components/lib/waterfall'
 import WaterfallSlot from '@/components/lib/waterfall-slot'
-
-import { CONTRIBUTE_TYPE, CONTRIBUTE_TYPE_DETAIL } from '@/common/const'
+import { ContentLoader } from 'vue-content-loader'
+import { CONTRIBUTE_TYPE, CONTRIBUTE_TYPE_DETAIL } from '@/common/const/cnuc'
 import BTL from '@/common/api/btl'
 import Build from '@/components/Build/Build'
 import BuildDesc from '@/components/Build/BuildDesc'
@@ -143,6 +160,7 @@ import moment from 'moment'
 import { thisExpression } from 'babel-types';
 export default {
   components: {
+    ContentLoader,
     Build,
     BuildDesc,
     ProcessList,
@@ -166,7 +184,8 @@ export default {
       token: null,
       contributes: [],
       contributesCount: {},
-      processesActive: 'demo',
+      processesActive: '效果图',
+      contributesActiveList: [],
       processDialog: {
         visible: false
       },
@@ -174,7 +193,29 @@ export default {
       yearRange: [],
       process: {},
       processes: [],
-      processesList: [],
+      processesList: [
+        {
+          year: null
+        },
+        {
+          year: null
+        },
+        {
+          year: null
+        },
+        {
+          year: null
+        },
+        {
+          year: null
+        },
+        {
+          year: null
+        },
+        {
+          year: null
+        }
+      ],
 
       contributeDialog: {
         visible: false
@@ -197,16 +238,18 @@ export default {
   watch: {
     processNum: function (val) {
       this.process = this.processes[val]
-    }
+    },
   },
 
-  computed: {},
+  computed: {
+
+  },
 
   async mounted() {
     window.addEventListener('scroll', this.handleScroll)
     const { id } = this.$route.params
     this.id = id
-    const data = await BTL.buildingId(id)
+    const data = await BTL.building(id)
 
     const descList = [
       {
@@ -216,10 +259,6 @@ export default {
       {
         name: '层数',
         value: `${data.layers}层`
-      },
-      {
-        name: '设计',
-        value: `${data.company}`
       }
     ]
     this.descList = descList
@@ -235,6 +274,9 @@ export default {
   },
 
   methods: {
+    handleClickContribute(data) {
+      console.log(data)
+    },
     handleScroll() {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       if (scrollTop > 64) {
@@ -243,8 +285,20 @@ export default {
         this.fixed = false
       }
     },
+    initContributeActiveList(val) {
+      this.contributesActiveList = []
+
+      setTimeout(() => {
+        this.contributesActiveList = this.contributes.filter(_ => _.key === val)
+        console.log(this.contributesActiveList)
+      }, 0)
+      // setTimeout(() => {
+      //   this.contributesActiveList[0]['show'] = true
+      // }, 1000)
+
+    },
     async initContribute() {
-      const data = await BTL.buildingIdContribute(this.id)
+      const data = await BTL.buildingContribute(this.id)
       const count = {
         demo: 0,
         finish: 0
@@ -254,12 +308,15 @@ export default {
       data.forEach(item => {
         const { date, type } = item
         const year = moment(date).format('YYYY')
-        if (type === 1) {
+        if (type === CONTRIBUTE_TYPE.DESIGN) {
+          item.key = '效果图'
           count.demo = count.demo + 1
         } else {
           if (year > this.yearRange[1]) {
+            item.key = '已建成'
             count.finish = count.finish + 1
           } else {
+            item.key = year
             if (count[year]) {
               count[year] = count[year] + 1
             } else {
@@ -274,13 +331,15 @@ export default {
           const { width, height } = image
           item.width = width
           item.height = height + 58
+          item.show = false
           list.push(item)
         }
       })
 
+      console.log(list)
+
       this.contributes = list
       this.contributesCount = count
-      this.wHeight = document.body.clientHeight
     },
 
     processTooltip(val) {
@@ -289,8 +348,7 @@ export default {
       }
     },
     handleClickProcesses(data) {
-      console.log(data)
-
+      this.initContributeActiveList(data.year)
       this.processesActive = data.year
       this.process = data
     },
@@ -348,6 +406,9 @@ export default {
       if (count['demo'] > 0) {
         processesList.push({
           year: '效果图',
+          basic: 0,
+          layers: 0,
+          seconds: 0,
           count: count['demo']
         })
       }
@@ -367,10 +428,17 @@ export default {
       if (count['finish'] > 0) {
         processesList.push({
           year: '已建成',
+          basic: 100,
+          layers: this.processes[this.processes.length - 1]['layers'],
+          seconds: this.processes[this.processes.length - 1]['seconds'],
           count: count['finish']
         })
       }
-      this.processesList = processesList
+
+      setTimeout(() => {
+        this.processesList = processesList
+      }, 1000)
+      this.initContributeActiveList('效果图')
     }
   }
 }

@@ -51,6 +51,7 @@ export default {
 
   methods: {
     handleClick(data) {
+      if (data.year === this.active) return
       this.$emit('click', data)
     }
   }

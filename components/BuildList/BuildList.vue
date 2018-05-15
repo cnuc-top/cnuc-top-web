@@ -2,7 +2,7 @@
 @require '../../styles/cnuc/var/color.styl';
 
 .build-list {
-  margin-top: 30px;
+
   display: flex;
   flex-wrap: wrap;
   padding-bottom: 30px;
@@ -20,7 +20,6 @@
 <template>
   <div class="build-list">
     <el-row :gutter="24">
-
       <el-col :span="12" v-for="(item, index) in data" :key="index">
         <router-link :to="'./buildings/' + item.id">
           <build-item :data="item"></build-item>
@@ -31,7 +30,6 @@
 </template>
 
 <script>
-
 import BuildItem from '@/components/BuildList/BuildItem'
 
 export default {

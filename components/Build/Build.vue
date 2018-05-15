@@ -47,11 +47,19 @@ import BuildBase from '@/components/Build/BuildBase'
 import BuildStructure from '@/components/Build/BuildStructure'
 import BuildSecound from '@/components/Build/BuildSecound'
 import BuildFrame from '@/components/Build/BuildFrame'
+import { SVGFILE_TYPE } from '@/common/const/cnuc'
+
+
 export default {
   components: { BuildBase, BuildStructure, BuildSecound, BuildFrame },
 
   props: {
-    data: Object,
+    data: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
     visibles: {
       type: Object,
       default: function () {
@@ -66,8 +74,7 @@ export default {
       type: Object,
       default: function () {
         return {
-          basic: 100,
-          layers: this.data.layers
+          basic: 100
         }
       }
     }
@@ -75,25 +82,26 @@ export default {
 
   data() {
     return {
-
-      // process: {
-      //   layers: parseInt(this.data.layers * .7),
-      //   seconds: parseInt(this.data.layers * .5),
-      //   basic: 100,
-      // }
     }
   },
+
 
   computed: {
     structure() {
-      return this.data.svgfiles.find(_ => _.type === 1)['content']
+      if (this.data && this.data.svgfiles) {
+        const svg = this.data.svgfiles.find(_ => _.type === SVGFILE_TYPE.STRUCTURE)
+        return svg ? svg['content'] : ''
+      }
     },
     secounds() {
-      return this.data.svgfiles.filter(_ => _.type === 2)
+      if (this.data && this.data.svgfiles) {
+        return this.data.svgfiles.filter(_ => _.type === SVGFILE_TYPE.SCOUNDS)
+      }
     }
   },
 
-  mounted() { },
+  mounted() {
+  },
 
   methods: {}
 }

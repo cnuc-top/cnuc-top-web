@@ -40,6 +40,24 @@ $header-height = 64px;
     padding: 0;
     margin: 0;
     z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: $header-height;
+
+    &-item {
+      display: block;
+      padding: 0 22px;
+      opacity: 0.8;
+      transition: 0.15s;
+
+      a {
+        line-height: 30px;
+        font-size: 17px;
+        text-decoration: none;
+        color: #FFF;
+      }
+    }
   }
 }
 </style>
@@ -54,7 +72,18 @@ $header-height = 64px;
         </router-link>
       </h1>
       <ul class="nav">
-
+        <li class="nav-item">
+          <a href="">首页</a>
+        </li>
+        <li class="nav-item">
+          <a href="">排行榜</a>
+        </li>
+        <li class="nav-item">
+          <a href="">论坛</a>
+        </li>
+        <li class="nav-item">
+          <a href="">关于</a>
+        </li>
       </ul>
     </div>
   </div>
